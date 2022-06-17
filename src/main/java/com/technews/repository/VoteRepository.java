@@ -1,6 +1,6 @@
-package com.technews.technewsjavaapi.repository;
+package com.technews.repository;
 
-import com.technews.technewsjavaapi.model.Vote;
+import com.technews.model.Vote;
 import org.springframework.data.jpa.repository.JpaRepository; // so the interface will inherit the methods used to access the database for standard CRUD operations
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,13 +1,14 @@
-package com.technews.technewsjavaapi.repository;
+package com.technews.repository;
 
-import com.technews.technewsjavaapi.model.User;
+import com.technews.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository; // so the interface will inherit the methods used to access the database for standard CRUD operations
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository // any class that fulfills the role of a data access object (DAO)—
            // in other words, it contains data retrieval, storage, and search functionality
 
-// <User, Integer> to ensure that the repository can take User (from the entity model we created) and the id of that user
-public interface UserRepository extends JpaRepository<User, Integer> {
-    User findUserByEmail(String email) throws Exception; // custom query method
+public interface CommentRepository extends JpaRepository<Comment, Integer> {
+    List<Comment> findAllCommentsByPostId(int postId);
 }
