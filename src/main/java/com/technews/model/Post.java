@@ -1,21 +1,19 @@
 package com.technews.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import groovyjarjarantlr4.v4.runtime.misc.NotNull;
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-@Entity // marks this as a persistable object, so that the User class can map to a table
-
+@Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(name = "post")
+public class Post implements Serializable {
 
-@Table(name = "post") // specifies the name of the table that this class maps to.
-// If this annotation isn't present, the table name will be the class name by default
-
-public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -27,26 +25,30 @@ public class Post {
     private int voteCount;
     private Integer userId;
 
-    @NotNull // signals to the Spring Data JPA that this variable is not to be allowed to be null in the database
-    @Temporal(TemporalType.DATE) // allows us to use the type Date in the database and signals to the JPA that these fields will house data of that type
-    @Column(name = "posted_at") // designates the name of the column for the database
-    private Date postedAt;
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    @Column(name = "posted_at")
+    private Date postedAt = new Date();
+
     @NotNull
     @Temporal(TemporalType.DATE)
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private Date updatedAt = new Date();
+
+    // Need to use FetchType.LAZY to resolve multiple bags exception
+    @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments;
 
-    public Post(Integer id, String title, String postUrl, String userName, int voteCount, Integer userId, Date postedAt, Date updatedAt, List<Comment> comments) {
+
+    public Post() {
+    }
+
+    public Post(Integer id, String title, String postUrl, int voteCount, Integer userId) {
         this.id = id;
         this.title = title;
         this.postUrl = postUrl;
-        this.userName = userName;
         this.voteCount = voteCount;
         this.userId = userId;
-        this.postedAt = postedAt;
-        this.updatedAt = updatedAt;
-        this.comments = comments;
     }
 
     public Integer getId() {

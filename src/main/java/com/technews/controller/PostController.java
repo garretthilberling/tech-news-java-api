@@ -6,7 +6,6 @@ import com.technews.model.Vote;
 import com.technews.repository.PostRepository;
 import com.technews.repository.UserRepository;
 import com.technews.repository.VoteRepository;
-import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +15,7 @@ import java.util.List;
 
 @RestController
 public class PostController {
+
     @Autowired
     PostRepository repository;
 
@@ -24,9 +24,8 @@ public class PostController {
 
     @Autowired
     UserRepository userRepository;
-
-    @GetMapping("/api/posts")
     // get all posts
+    @GetMapping("/api/posts")
     public List<Post> getAllPosts() {
         List<Post> postList = repository.findAll();
         for (Post p : postList) {
@@ -38,13 +37,13 @@ public class PostController {
     // get single post by id
     @GetMapping("/api/posts/{id}")
     public Post getPost(@PathVariable Integer id) {
-        Post returnPost = repository.getReferenceById(id);
+        Post returnPost = repository.getById(id);
         returnPost.setVoteCount(voteRepository.countVotesByPostId(returnPost.getId()));
 
         return returnPost;
     }
 
-    // create a post
+    // create post
     @PostMapping("/api/posts")
     @ResponseStatus(HttpStatus.CREATED)
     public Post addPost(@RequestBody Post post) {
@@ -52,10 +51,10 @@ public class PostController {
         return post;
     }
 
-    // update a post by id
+    // update post by id
     @PutMapping("/api/posts/{id}")
     public Post updatePost(@PathVariable int id, @RequestBody Post post) {
-        Post tempPost = repository.getReferenceById(id);
+        Post tempPost = repository.getById(id);
         tempPost.setTitle(post.getTitle());
         return repository.save(tempPost);
     }
@@ -64,16 +63,22 @@ public class PostController {
     @PutMapping("/api/posts/upvote")
     public String addVote(@RequestBody Vote vote, HttpServletRequest request) {
         String returnValue = "";
+
         if(request.getSession(false) != null) {
             Post returnPost = null;
+
             User sessionUser = (User) request.getSession().getAttribute("SESSION_USER");
             vote.setUserId(sessionUser.getId());
             voteRepository.save(vote);
+
             returnPost = repository.getById(vote.getPostId());
             returnPost.setVoteCount(voteRepository.countVotesByPostId(vote.getPostId()));
+
+            returnValue = "";
         } else {
             returnValue = "login";
         }
+
         return returnValue;
     }
 
