@@ -14,7 +14,7 @@ Tech News Java is a social media application built as an implementation of a Jav
 Here is a video demonstration of how to use this app:
 
 <div align="center">
-        <img alt="gif demonstration" src="./assets/img/gif-demonstration.gif" width="700" />
+        <img alt="gif demonstration" src="./src/main/resources/static/img/gif-demonstration.gif" width="700" />
 </div>
 
 
