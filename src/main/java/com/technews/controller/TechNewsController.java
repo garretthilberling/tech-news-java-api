@@ -68,6 +68,15 @@ public class TechNewsController {
         return "redirect:/dashboard";
     }
 
+    // user logout
+    @GetMapping("/users/logout")
+    public String logout(HttpServletRequest request) {
+        if (request.getSession(false) != null) {
+            request.getSession().invalidate();
+        }
+        return "redirect:/login";
+    }
+
     // user sign up
     @PostMapping("/users")
     public String signup(@ModelAttribute User user, Model model, HttpServletRequest request) throws Exception {
